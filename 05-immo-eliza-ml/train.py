@@ -65,6 +65,10 @@ def train():
     X_train_cat = enc.transform(X_train[cat_features]).toarray()
     X_test_cat = enc.transform(X_test[cat_features]).toarray()
 
+
+
+
+
     # Combine the numerical and one-hot encoded categorical columns
     X_train = pd.concat(
         [
@@ -91,6 +95,8 @@ def train():
     model.fit(X_train, y_train)
 
     # Evaluate the model
+
+
     train_score = r2_score(y_train, model.predict(X_train))
     test_score = r2_score(y_test, model.predict(X_test))
     print(f"Train R² score: {train_score}")
