@@ -39,26 +39,12 @@ def train():
     data = data.drop(outliers[0])
 
     # Impute missing values using SimpleImputer
+    imputer = SimpleImputer(strategy="mean")
+    imputer.fit(X_train[num_features])
+    X_train[num_features] = imputer.transform(X_train[num_features])
+    X_test[num_features] = imputer.transform(X_test[num_features])
+
     
-
-
-    # Separate features for mean and median imputation
-    mean_impute_features = ["latitude", "longitude","nbr_frontages","nbr_bedrooms","construction_year"]  # Add the feature names you want to impute using mean
-    median_impute_features = ["total_area_sqm", "surface_land_sqm","terrace_sqm","garden_sqm","primary_energy_consumption_sqm","cadastral_income"]  # Add the feature names you want to impute using median
-
-    # Initialize imputers
-    mean_imputer = SimpleImputer(strategy="mean")
-    median_imputer = SimpleImputer(strategy="median")
-
-    # Fit and transform mean imputation
-    X_train[mean_impute_features] = mean_imputer.fit_transform(X_train[mean_impute_features])
-    X_test[mean_impute_features] = mean_imputer.transform(X_test[mean_impute_features])
-
-    # Fit and transform median imputation
-    X_train[median_impute_features] = median_imputer.fit_transform(X_train[median_impute_features])
-    X_test[median_impute_features] = median_imputer.transform(X_test[median_impute_features])
-
-
     # Convert categorical columns with one-hot encoding using OneHotEncoder
     enc = OneHotEncoder()
     enc.fit(X_train[cat_features])
@@ -109,8 +95,7 @@ def train():
             "fl_features": fl_features,
             "cat_features": cat_features,
         },
-        "mean_imputer": mean_imputer,
-        "median_imputer":median_imputer,
+        "imputer": imputer,
         "enc": enc,
         "model": model,
     }
