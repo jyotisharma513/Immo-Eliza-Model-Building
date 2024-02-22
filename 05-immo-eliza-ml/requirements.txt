@@ -1,6 +1,0 @@
-click
-pandas
-Pyarrow
-numpy
-scikit-learn
-joblib
