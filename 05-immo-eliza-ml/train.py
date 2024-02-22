@@ -1,16 +1,19 @@
 import joblib
+import numpy as np
+from scipy import stats
 import pandas as pd
 from sklearn.impute import SimpleImputer
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder
+from sklearn.ensemble import RandomForestRegressor
 
 
 def train():
     """Trains a linear regression model on the full dataset and stores output."""
     # Load the data
-    data = pd.read_csv("C:\\Users\\jyoti\\Immo-Eliza-Model-Building\\05-immo-eliza-ml\\data\\properties.csv")
+    data = pd.read_csv("data/properties.csv")
 
     # Define features to use
 
@@ -26,6 +29,14 @@ def train():
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.20, random_state=505
     )
+
+     # Detect and remove outliers using Z-score
+    z = np.abs(stats.zscore(data[num_features]))
+    outliers = np.where(z > 4)
+
+    # Print and remove outliers
+    print("Outliers detected in the dataset:\n", data.iloc[outliers[0]])
+    data = data.drop(outliers[0])
 
     # Impute missing values using SimpleImputer
     
@@ -74,7 +85,9 @@ def train():
     print(f"Features: \n {X_train.columns.tolist()}")
 
     # Train the model
-    model = LinearRegression()
+    #model = LinearRegression()
+    model=RandomForestRegressor(n_estimators=100, max_depth=10, min_samples_split=2,  min_samples_leaf=1,random_state=42)                              
+                                    
     model.fit(X_train, y_train)
 
     # Evaluate the model
@@ -95,7 +108,7 @@ def train():
         "enc": enc,
         "model": model,
     }
-    joblib.dump(artifacts, "C:\\Users\\jyoti\\Immo-Eliza-Model-Building\\05-immo-eliza-ml\\models\\artifacts.joblib")
+    joblib.dump(artifacts, "models/artifacts.joblib")
 
 
 if __name__ == "__main__":

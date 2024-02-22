@@ -9,6 +9,7 @@ import pandas as pd
     "-o",
     "--output-dataset",
     default="output/predictions.csv",
+    
     help="full path where to store predictions",
     required=True,
 )
@@ -20,7 +21,7 @@ def predict(input_dataset, output_dataset):
     ### -------------------------------------------------- ###
 
     # Load the model artifacts using joblib
-    artifacts = joblib.load("models/artifacts.joblib")
+    artifacts = joblib.load("models\artifacts.joblib")
 
     # Unpack the artifacts
     num_features = artifacts["features"]["num_features"]
@@ -48,7 +49,7 @@ def predict(input_dataset, output_dataset):
 
     # Make predictions
     predictions = model.predict(data)
-    predictions = predictions[:10]  # just picking 10 to display sample output :-)
+    #predictions = predictions[:100]  # just picking 10 to display sample output :-)
 
     ### -------- DO NOT TOUCH THE FOLLOWING LINES -------- ###
     # Save the predictions to a CSV file (in order of data input!)
